@@ -21,26 +21,27 @@ module Liker
   end
   
 private
-  
+
   def self.facebook_likes_count(url)
     resp = Net::HTTP.get_response("graph.facebook.com", "/#{url}")
-    json = JSON.parse(resp.body)
-    json ? json["shares"].to_i : 0
+    likes_count(JSON.parse(resp.body), "shares")
   end
-  
+
   def self.vk_likes_count(url)
     base_url = "http://vkontakte.ru/share.php"
     url = "#{base_url}?act=count&index=0&url=#{url}"
     resp = Net::HTTP.get_response(URI.parse(url))
     regexp = /[VK.Share.count(0, ]([\d]*)[);]/
-    count = regexp.match(resp.body)
-    count ? count[1].to_i : 0
+    likes_count(regexp.match(resp.body), 1)
   end
-  
+
   def self.twitter_likes_count(url)
     resp = Net::HTTP.get_response("cdn.api.twitter.com", "/1/urls/count.json?url=#{url}&callback=")
-    json = JSON.parse(resp.body)
-    json ? json["count"].to_i : 0
+    likes_count(JSON.parse(resp.body), "count")
+  end
+
+  def self.likes_count(source, key)
+    source ? source[key].to_i : 0
   end
   
 end

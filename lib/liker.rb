@@ -20,7 +20,7 @@ module Liker
     end
   end
   
-  private
+private
   
   def self.facebook_likes_count(url)
     resp = Net::HTTP.get_response("graph.facebook.com", "/#{url}")

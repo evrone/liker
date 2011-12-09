@@ -15,7 +15,7 @@ module Liker
         :vk => self.vk_likes_count(url),
         :twitter => self.twitter_likes_count(url)
       }
-      result[:total] = result.values.inject{|sum,value| sum + value}
+      result[:total] = result.values.inject(:+)
       result
     end
   end

@@ -3,17 +3,15 @@ require 'net/http'
 require 'json'
 
 module Liker
-  def self.likes_count(*options)
-    url = options[0]
-    raise ArgumentError, "Specify the url as the first argument" unless url
-    source = options[1][:source] rescue nil
+  def self.likes_count(url, options={})
+    source = options.delete(:source)
     if source
       Liker.send("#{source}_likes_count", url)
     else
       result = {
-        :facebook => self.facebook_likes_count(url),
-        :vk => self.vk_likes_count(url),
-        :twitter => self.twitter_likes_count(url)
+        :vk       => self.vk_likes_count(url),
+        :twitter  => self.twitter_likes_count(url),
+        :facebook => self.facebook_likes_count(url)
       }
       result[:total] = result.values.inject(:+)
       result
